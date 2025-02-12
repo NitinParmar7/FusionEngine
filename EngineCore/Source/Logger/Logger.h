@@ -7,6 +7,7 @@
 #include <string_view>
 #include <string>
 #include <mutex>
+#include <fstream>
 
 
 
@@ -35,29 +36,44 @@ public:
 		return instance;
 	}
 
-	void SetLogLevel(LogLevel level)
-	{
-		currentLevel = level;
-	}
+	void SetLogLevel(LogLevel level);
 
-	void Log(LogLevel level, std::string_view message)
-	{
-#ifdef ENABLE_LOGGING
-		if (level < currentLevel) {
-			return;
-		}
+	void Log(LogLevel level, std::string_view message);
 
-		std::lock_guard<std::mutex> lock(mutex);
-#endif // ENABLE_LOGGING
-
-	}
+	void SetOutputFile(std::string_view filename);
 
 
 private:
 
+	Logger() : currentLevel(LogLevel::Debug) {}
+
+	~Logger();
+
+	Logger(const Logger&) = delete;
+	Logger& operator=(const Logger&) = delete;
+
+	std::string GetTimeStamp();
+
+	constexpr std::string_view LogLevelToString(LogLevel level) const;
+
 	LogLevel currentLevel;
 	std::mutex mutex;
+	std::ofstream fileStream;
+
 };
 
 #endif // !LOGGER_H
+
+#ifdef ENABLE_LOGGING
+#define LOG_DEBUG(msg) Logger::Instance().Log(LogLevel::Debug, msg);
+#define LOG_INFO(msg) Logger::Instance().Log(LogLevel::Info, msg);
+#define LOG_WARN(msg) Logger::Instance().Log(LogLevel::Warning, msg);
+#define LOG_ERROR(msg) Logger::Instance().Log(LogLevel::Error, msg);
+#else
+#define LOG_DEBUG(msg) ((void)0)
+#define LOG_INFO(msg)  ((void)0)
+#define LOG_WARN(msg)  ((void)0)
+#define LOG_ERROR(msg) ((void)0)
+#endif // ENABLE_LOGGING
+
 

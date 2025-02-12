@@ -3,22 +3,24 @@
 #include "pch.h"
 #include "EngineAPI.h"
 #include <iostream>
+#include <format>
+#include <Logger/Logger.h>
 
 // Example subsystem stubs (e.g., logging, ECS, job system, etc.)
 namespace EngineCore {
     void Init() {
-        std::cout << "[Engine] Core systems initializing..." << std::endl;
+       LOG_INFO("[EngineCore] system initializing...")
         // Initialize logging, event systems, ECS, etc.
     }
 
     void Update(float dt) {
         // Update core subsystems (physics, game logic, rendering calls, etc.)
-        std::cout << "[Engine] Updating systems with dt = " << dt << std::endl;
+       LOG_INFO(std::format("[EngineCore] Updating systems with dt = {}", dt));
     }
 
     void Shutdown() {
         // Clean up all initialized subsystems
-        std::cout << "[Engine] Shutting down core systems..." << std::endl;
+        LOG_INFO("[EngineCore] Shutting down engine core systems...");
     }
 }
 
