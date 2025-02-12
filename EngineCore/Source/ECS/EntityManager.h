@@ -11,10 +11,20 @@ public:
 
 	// [[nodiscard]] is a C++17 attribute that warns if the return value is ignored.
 	// This is useful here to ensure that when an entity is created, the caller doesn't discard its ID.
-	[[nodiscard]] Entity createEntity();
+    // [[nodiscard]] is a C++17 attribute to warn if the returned value is ignored.
+    [[nodiscard]] inline Entity createEntity() {
+        if (!freeEntities.empty()) {
+            Entity id = freeEntities.front();
+            freeEntities.pop();
+            return id;
+        }
+        return nextEntity++;
+    }
 
-
-	void destroyEntity(Entity entity);
+    // Marked inline to ensure definition is available.
+    inline void destroyEntity(Entity entity) {
+        freeEntities.push(entity);
+    }
 
 private:
 

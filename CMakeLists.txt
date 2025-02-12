@@ -1,6 +1,6 @@
 # CMakeList.txt (Top - Level)
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.31.5)
 project(FusionEngine)
 
 # Set the C++ standard to C++20
@@ -18,18 +18,51 @@ endif()
 add_subdirectory(EngineCore)
 add_subdirectory(PongGame)
 
+# --- Testing Setup Using FetchContent (CMake 3.11+ feature) ---
+# FetchContent is a modern CMake module that downloads external content at configuration time.
+include(CTest)  # Enable testing support.
+include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG v3.8.0   # You can change the version as desired.
+)
+FetchContent_MakeAvailable(Catch2)
+
+enable_testing()
+add_subdirectory(Tests)
+
+
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT PongGame)
 
+# if(WIN32)
+  # execute_process(
+    # COMMAND cmd /c start "" "${CMAKE_BINARY_DIR}/FusionEngine.sln"
+    # WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+    # RESULT_VARIABLE result
+    # OUTPUT_VARIABLE output
+    # ERROR_VARIABLE error_output
+  # )
+  # message("Attempted to open solution; result: ${result}")
+  # if(NOT result EQUAL 0)
+    # message(WARNING "Failed to open solution automatically. Error: ${error_output}")
+  # endif()
+# endif()
+
 if(WIN32)
-  execute_process(
-    COMMAND cmd /c start "" "${CMAKE_BINARY_DIR}/FusionEngine.sln"
+  # On Windows, use 'cmd /C' to run the command with output redirection.
+  add_custom_target(run_tests
+    COMMAND cmd /C "${CMAKE_CTEST_COMMAND} --output-on-failure > test_output.log"
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-    RESULT_VARIABLE result
-    OUTPUT_VARIABLE output
-    ERROR_VARIABLE error_output
+    COMMENT "Running tests and saving output to test_output.log"
   )
-  message("Attempted to open solution; result: ${result}")
-  if(NOT result EQUAL 0)
-    message(WARNING "Failed to open solution automatically. Error: ${error_output}")
-  endif()
+else()
+  # On Unix-like systems, use 'sh -c' for the same effect.
+  add_custom_target(run_tests
+    COMMAND sh -c "${CMAKE_CTEST_COMMAND} --output-on-failure > test_output.log"
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+    COMMENT "Running tests and saving output to test_output.log"
+  )
 endif()
+
