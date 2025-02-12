@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Logger.h"
 #include <format>
+#include <chrono>
 
 Logger::~Logger()
 {
