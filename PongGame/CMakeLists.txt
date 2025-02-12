@@ -1,6 +1,16 @@
 # PongGame/CMakeLists.txt
+
+file(GLOB_RECURSE PONG_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
+)
+
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}
+             PREFIX "PongGame"
+             FILES ${PONG_SOURCES})
+
 # Create an executable target for the Pong game.
-add_executable(PongGame PongGame.cpp)
+add_executable(PongGame ${PONG_SOURCES})
 
 # Link the PongGame executable to the EngineCore library.
 target_link_libraries(PongGame PRIVATE EngineCore)
