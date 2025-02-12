@@ -433,5 +433,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-*.txt
+
+# Build Folder
 build/
+
+# CMake
+*.txt
+!CMakeLists.txt
