@@ -10,3 +10,10 @@ target_link_libraries(PongGame PRIVATE EngineCore)
 target_include_directories(PongGame PRIVATE
     ${CMAKE_SOURCE_DIR}/EngineCore/API
 )
+
+# Copy EngineCore.dll to the output directory of PongGame after building.
+add_custom_command(TARGET PongGame POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+       $<TARGET_FILE:EngineCore>
+       $<TARGET_FILE_DIR:PongGame>
+)
