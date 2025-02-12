@@ -9,6 +9,8 @@
 // Example subsystem stubs (e.g., logging, ECS, job system, etc.)
 namespace EngineCore {
     void Init() {
+
+       Logger::Instance().SetOutputFile("log.txt");
        LOG_INFO("[EngineCore] system initializing...")
         // Initialize logging, event systems, ECS, etc.
     }
