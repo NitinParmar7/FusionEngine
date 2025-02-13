@@ -2,6 +2,7 @@
 #include <optional>
 #include <functional>
 #include "Entity.h"
+#include "EngineAPI.h"
 
 template<typename Component>
 class ComponentManager {

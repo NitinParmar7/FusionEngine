@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include <vector>
+#include "EngineAPI.h"
 
 // Abstract base class for all systems.
 class System {

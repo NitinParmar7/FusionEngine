@@ -2,14 +2,13 @@
 
 # Collect all source files recursively.
 file(GLOB_RECURSE ENGINE_CORE_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
-# Organize files in Visual Studio based on their folder structure.
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Source 
-             PREFIX "Source" 
-             FILES ${ENGINE_CORE_SOURCES})
+foreach(file ${ENGINE_CORE_SOURCES})
+    message(STATUS "Found file: ${file}")
+endforeach()
 
 # Add the library target and include the sources.
 add_library(EngineCore SHARED ${ENGINE_CORE_SOURCES})
@@ -23,4 +22,6 @@ target_include_directories(EngineCore PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/API
 	${CMAKE_CURRENT_SOURCE_DIR}/Source
 	${CMAKE_CURRENT_SOURCE_DIR}/Source/Core
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source/ECS
+	${CMAKE_CURRENT_SOURCE_DIR}/Source/Logger
 )

@@ -18,7 +18,12 @@ target_include_directories(ECSTests PRIVATE
 
 # Link against Catch2.
 target_link_libraries(ECSTests PRIVATE EngineCore ExampleSystems Catch2::Catch2WithMain)
-
+# Copy EngineCore.dll to the output directory of PongGame after building.
+add_custom_command(TARGET ECSTests POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+       $<TARGET_FILE:EngineCore>
+       $<TARGET_FILE_DIR:ECSTests>
+)
 
 
 
@@ -31,9 +36,3 @@ include(Catch)
 # Include the test discovery module from the new "scripts" folder.
 catch_discover_tests(ECSTests)
 
-# Copy EngineCore.dll to the output directory of PongGame after building.
-add_custom_command(TARGET ECSTests POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy_if_different
-       $<TARGET_FILE:EngineCore>
-       $<TARGET_FILE_DIR:ECSTests>
-)

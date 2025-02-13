@@ -8,7 +8,7 @@
 #include "../EngineCore/Source/ECS/ComponentManager.h"
 #include "../EngineCore/Source/ECS/Entity.h"
 
-TEST_CASE("ComponentManager adds and retrieves a Position component", "[ComponentManager]") {
+TEST_CASE("ComponentManager adds and retrieves a Position component", "[ComponentManagerTest]") {
     ComponentManager<Position> posManager;
     Entity testEntity = 1;  // For testing, use a dummy entity ID
     Position pos{ 10.0f, 20.0f };
@@ -21,7 +21,7 @@ TEST_CASE("ComponentManager adds and retrieves a Position component", "[Componen
     REQUIRE(retrieved->get().y == Catch::Approx(20.0f));
 }
 
-TEST_CASE("ComponentManager removes a Position component", "[ComponentManager]") {
+TEST_CASE("ComponentManager removes a Position component", "[ComponentManagerTest]") {
     ComponentManager<Position> posManager;
     Entity testEntity = 2;
     Position pos{ 5.0f, 15.0f };

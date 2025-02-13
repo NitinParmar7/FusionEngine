@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include <queue>
+#include "EngineAPI.h"
 
 
 // EntityManager is responsible for creating and recycling entities.
