@@ -1,6 +1,6 @@
 # CMakeList.txt (Top - Level)
 
-cmake_minimum_required(VERSION 3.31.5)
+cmake_minimum_required(VERSION 3.30)
 project(FusionEngine)
 
 # Set the C++ standard to C++20
@@ -14,9 +14,7 @@ else()
 	add_compile_options(-Wall -Wextra -Werror)
 endif()
 
-# Add Subdirectories for your project
-add_subdirectory(EngineCore)
-add_subdirectory(PongGame)
+
 
 # --- Testing Setup Using FetchContent (CMake 3.11+ feature) ---
 # FetchContent is a modern CMake module that downloads external content at configuration time.
@@ -28,10 +26,20 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
   GIT_TAG v3.8.0   # You can change the version as desired.
 )
+
 FetchContent_MakeAvailable(Catch2)
 
+
 enable_testing()
+
+# Add Subdirectories for your project
+add_subdirectory(EngineCore)
+add_subdirectory(PongGame)
 add_subdirectory(Tests)
+add_subdirectory(Examples)
+
+
+
 
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT PongGame)
@@ -51,6 +59,11 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT P
 # endif()
 
 if(WIN32)
+  add_custom_target(open_solution
+    COMMAND cmd /c start "" "${CMAKE_BINARY_DIR}/FusionEngine.sln"
+    COMMENT "Automatically opening the Visual Studio solution..."
+  )
+
   # On Windows, use 'cmd /C' to run the command with output redirection.
   add_custom_target(run_tests
     COMMAND cmd /C "${CMAKE_CTEST_COMMAND} --output-on-failure > test_output.log"
