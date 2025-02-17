@@ -1,38 +1,52 @@
 // Examples/main.cpp
 #include <iostream>
+
+
 #include "DummyMovementSystem.h"
-#include "../EngineCore/Source/ECS/Entity.h"
-#include "../EngineCore/Source/ECS/EntityManager.h"
-#include "../EngineCore/Source/ECS/ComponentManager.h"
-#include "../EngineCore/Source/ECS/PositionData.h"
+
+#include <SystemManager.h>
+#include <EntityManager.h>
+#include <JobSystem/JobSystem.h>
+#include <Logger.h>
 
 int main() {
     // Create basic ECS components.
     EntityManager entityManager;
     ComponentManager<Position> posManager;
 
+    // Create a system manager.
+    SystemManager systemManager;
+
+
+    DummyMovementSystem* dummyMovementSystem = systemManager.registerSystem<DummyMovementSystem>(posManager);
+
     // Create an entity and add a Position component.
     Entity e = entityManager.createEntity();
     posManager.addComponent(e, Position{ 0.0f, 0.0f });
 
-    // Create a dummy movement system that moves entities.
-    DummyMovementSystem movementSystem(posManager);
     // Assume our system operates on all entities; here, we add our single entity.
-    movementSystem.entities.push_back(e);
+    dummyMovementSystem->entities.push_back(e);
+
+    JobSystem jobSystem;
 
     // Simulate an update (for example, 1 second).
     float dt = 1.0f;
-    movementSystem.update(dt);
+
+    auto futureResult = jobSystem.submit([&systemManager, dt]() {
+        systemManager.updateAll(dt);
+    });
+
+    futureResult.get();
+
 
     // Retrieve updated position.
-    auto opt = posManager.getComponent(e);
-    if (opt.has_value()) {
-        std::cout << "Entity " << e << " new position: ("
-            << opt->get().x << ", "
-            << opt->get().y << ")\n";
+    auto posOpt = posManager.getComponent(e);
+    if (posOpt.has_value()) {
+        auto& pos = posOpt.value().get();
+        LOG_INFO("Entity {} new position: ( {} , {})", e, pos.x, pos.y);
     }
     else {
-        std::cout << "Entity " << e << " has no position component!\n";
+        LOG_INFO("Entity {} has no position component!", e);
     }
 
     return 0;

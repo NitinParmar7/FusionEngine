@@ -8,6 +8,8 @@
 #include <string>
 #include <mutex>
 #include <fstream>
+#include <format>
+#include "EngineAPI.h"
 
 
 
@@ -26,7 +28,7 @@ enum class LogLevel
 };
 
 
-class Logger
+class ENGINE_API Logger
 {
 public:
 
@@ -41,6 +43,13 @@ public:
 	void Log(LogLevel level, std::string_view message);
 
 	void SetOutputFile(std::string_view filename);
+
+	// Templated function to format a message and log it.
+	template<typename... Args>
+	void LogFormatted(LogLevel level, std::format_string<Args...> formatStr, Args&&... args) {
+		std::string message = std::format(formatStr, std::forward<Args>(args)...);
+		Log(level, message);
+	}
 
 
 private:
@@ -65,10 +74,10 @@ private:
 #endif // !LOGGER_H
 
 #ifdef ENABLE_LOGGING
-#define LOG_DEBUG(msg) Logger::Instance().Log(LogLevel::Debug, msg);
-#define LOG_INFO(msg) Logger::Instance().Log(LogLevel::Info, msg);
-#define LOG_WARN(msg) Logger::Instance().Log(LogLevel::Warning, msg);
-#define LOG_ERROR(msg) Logger::Instance().Log(LogLevel::Error, msg);
+#define LOG_DEBUG(...) Logger::Instance().LogFormatted(LogLevel::Debug, __VA_ARGS__);
+#define LOG_INFO(...) Logger::Instance().LogFormatted(LogLevel::Info, __VA_ARGS__);
+#define LOG_WARN(...) Logger::Instance().LogFormatted(LogLevel::Warning, __VA_ARGS__);
+#define LOG_ERROR(...) Logger::Instance().LogFormatted(LogLevel::Error, __VA_ARGS__);
 #else
 #define LOG_DEBUG(msg) ((void)0)
 #define LOG_INFO(msg)  ((void)0)

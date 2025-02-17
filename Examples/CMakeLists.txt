@@ -9,11 +9,10 @@ add_executable(DummyExample
 
 # Include directories for your engine core ECS, if needed.
 target_include_directories(DummyExample PRIVATE
-    ${CMAKE_SOURCE_DIR}/EngineCore/Source/ECS
+    ${CMAKE_SOURCE_DIR}/EngineCore/Source
 )
 
-
-# Link the PongGame executable to the EngineCore library.
+# Link the DummyExample executable to the EngineCore library.
 target_link_libraries(DummyExample PRIVATE EngineCore)
 
 # Copy EngineCore.dll to the output directory of PongGame after building.
@@ -35,7 +34,7 @@ add_library(ExampleSystems STATIC
 
 # Include directories for DummyMovementSystem.
 target_include_directories(ExampleSystems PUBLIC
-    ${CMAKE_SOURCE_DIR}/EngineCore/Source/ECS  # If DummyMovementSystem depends on ECS headers.
+    ${CMAKE_SOURCE_DIR}/EngineCore/Source # If DummyMovementSystem depends on ECS headers.
     ${CMAKE_SOURCE_DIR}/Examples              # If DummyMovementSystem.h is here.
 )
 

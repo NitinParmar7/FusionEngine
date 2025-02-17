@@ -17,7 +17,7 @@ namespace EngineCore {
 
     void Update(float dt) {
         // Update core subsystems (physics, game logic, rendering calls, etc.)
-       LOG_INFO(std::format("[EngineCore] Updating systems with dt = {}", dt));
+       LOG_INFO("[EngineCore] Updating systems with dt = {}", dt);
     }
 
     void Shutdown() {
