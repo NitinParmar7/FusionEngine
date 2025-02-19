@@ -6,7 +6,7 @@
 
 
 // A basic job system (thread pool) using C++20 features.
-class ENGINE_API JobSystem {
+class JobSystem {
 public:
 
 	// Construct with a given number of threads; defaults to hardware concurrency.

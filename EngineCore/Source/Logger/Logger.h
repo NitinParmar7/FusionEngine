@@ -28,7 +28,7 @@ enum class LogLevel
 };
 
 
-class ENGINE_API Logger
+class Logger
 {
 public:
 
